@@ -111,14 +111,14 @@
   <meta name="description" content="首先定义基础模板类，表示不包含给定类型 12template &amp;lt;typename T, typename... Args&amp;gt;struct contains : public std::false_type &amp;#123;&amp;#125;; 接着进行特化，将可变模板参数中的类型逐个和目标类型进行比较，直到类型相同或者模板参数列表为空 123template &amp;lt;typename T, typ">
 <meta name="keywords" content="C++">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++代码片段（二）判断可变模板参数列中是否包含某一特定类型">
+<meta property="og:title" content="C++代码片段（二）判断可变模板参数中是否包含某一特定类型">
 <meta property="og:url" content="http://yoursite.com/2018/05/26/C++代码片段（二）判断可变模板参数列中是否包含某一特定类型/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="首先定义基础模板类，表示不包含给定类型 12template &amp;lt;typename T, typename... Args&amp;gt;struct contains : public std::false_type &amp;#123;&amp;#125;; 接着进行特化，将可变模板参数中的类型逐个和目标类型进行比较，直到类型相同或者模板参数列表为空 123template &amp;lt;typename T, typ">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-26T09:24:07.323Z">
+<meta property="og:updated_time" content="2018-05-26T09:27:29.226Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="C++代码片段（二）判断可变模板参数列中是否包含某一特定类型">
+<meta name="twitter:title" content="C++代码片段（二）判断可变模板参数中是否包含某一特定类型">
 <meta name="twitter:description" content="首先定义基础模板类，表示不包含给定类型 12template &amp;lt;typename T, typename... Args&amp;gt;struct contains : public std::false_type &amp;#123;&amp;#125;; 接着进行特化，将可变模板参数中的类型逐个和目标类型进行比较，直到类型相同或者模板参数列表为空 123template &amp;lt;typename T, typ">
 
 
@@ -136,7 +136,7 @@
   };
 </script>
 
-  <title>C++代码片段（二）判断可变模板参数列中是否包含某一特定类型 | Hexo</title>
+  <title>C++代码片段（二）判断可变模板参数中是否包含某一特定类型 | Hexo</title>
   
 
 
@@ -322,7 +322,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">C++代码片段（二）判断可变模板参数列中是否包含某一特定类型
+          <h1 class="post-title" itemprop="name headline">C++代码片段（二）判断可变模板参数中是否包含某一特定类型
               
             
           </h1>
@@ -347,7 +347,7 @@
                 
               
 
-              <time title="创建时间：2018-05-26 00:00:00 / 修改时间：17:24:07" itemprop="dateCreated datePublished" datetime="2018-05-26T00:00:00+08:00">2018-05-26</time>
+              <time title="创建时间：2018-05-26 17:25:00 / 修改时间：17:27:29" itemprop="dateCreated datePublished" datetime="2018-05-26T17:25:00+08:00">2018-05-26</time>
             
 
             
@@ -410,6 +410,7 @@
 <blockquote>
 <p>由于基础模板类的模板参数仅有T和Args两个，所以如果想要表示三个就需要进行特化</p>
 </blockquote>
+<a id="more"></a>
 <p>std::conditional是一个编译期类型选择模板库，使用方法如下</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::conditional&lt;<span class="keyword">bool</span>, type1, type2&gt;::type</span><br></pre></td></tr></table></figure>
 <p>当布尔表达式为真时返回type1，为假时返回type2。注意布尔表达式必须可以在编译期计算出来</p>
