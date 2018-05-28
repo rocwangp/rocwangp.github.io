@@ -347,7 +347,7 @@
                 
               
 
-              <time title="创建时间：2018-05-28 00:00:00 / 修改时间：12:30:09" itemprop="dateCreated datePublished" datetime="2018-05-28T00:00:00+08:00">2018-05-28</time>
+              <time title="创建时间：2018-05-28 00:00:00 / 修改时间：12:32:56" itemprop="dateCreated datePublished" datetime="2018-05-28T00:00:00+08:00">2018-05-28</time>
             
 
             
@@ -404,8 +404,7 @@
 
       
         
-          
-            <p>Linux下代码存在的位置有两种</p>
+          <p>Linux下代码存在的位置有两种</p>
 <ul>
 <li>/home下面，需要当前用户权限</li>
 <li>/user/local/include以及其他类似的位置，需要root用户权限</li>
@@ -415,27 +414,13 @@
 <li>~/.ssh，保存当前用户的public key</li>
 <li>/root/.ssh，保存root用户的public key</li>
 </ul>
-<h2 id="将代码clone到-home目录下"><a href="#将代码clone到-home目录下" class="headerlink" title="将代码clone到/home目录下"></a>将代码clone到/home目录下</h2><p>申请ssh公钥（email替换成注册github时候的邮箱）</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C "email"</span><br></pre></td></tr></table></figure>
-<p>一路回车（如果提示重名说明之前创建过公钥，如果之前的公钥没用了就先删掉，或者重命名）</p>
-<p>最后会在~/.ssh/下面出现id_rsa和id_rsa.pub两个文件，将id_rsa.pub中的内容复制到github中即可</p>
-<p>操作流程</p>
-<ul>
-<li>点击Github网站用户头像下的Settings</li>
-<li>点击左侧SSH and GPG keys</li>
-<li>点击New SSH key</li>
-<li>随便写上title，将Key填入id_rsa.pub中的内容</li>
-<li>点击Add SSH key</li>
-</ul>
-<p>此时就可以将github上的代码clone到/home/下面，也可以push上去</p>
-<h2 id="clone到-usr-local-include下"><a href="#clone到-usr-local-include下" class="headerlink" title="clone到/usr/local/include下"></a>clone到/usr/local/include下</h2><p>申请ssh公钥（注意这里多了一个sudo，会改变文件的创建位置）</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ssh-keygen -t rsa -C "email"</span><br></pre></td></tr></table></figure>
-<p>一路回车</p>
-<p>最后会在/root/.ssh/下面出现id_rsa和id_rsa.pub两个文件（先使用su命令进入root用户，再进入/root/.ssh/目录）</p>
-<p>采用同样的方法将id_rsa.pub添加到github上</p>
-<p>此时就可以将github上的代码clone到/usr/local/include下面，同时也可以push上去</p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/28/解决无法将自己github上的代码clone到usr目录下的问题/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

@@ -108,18 +108,18 @@
 
 
 
-  <meta name="description" content="Linux下代码存在的位置有两种  /home下面，需要当前用户权限 /user/local/include以及其他类似的位置，需要root用户权限  与之对应的.ssh位置也有两个  ~/.ssh，保存当前用户的public key /root/.ssh，保存root用户的public key  将代码clone到/home目录下申请ssh公钥（email替换成注册github时候的邮箱） 1s">
+  <meta name="description" content="Linux下代码存在的位置有两种  /home下面，需要当前用户权限 /user/local/include以及其他类似的位置，需要root用户权限  与之对应的.ssh位置也有两个  ~/.ssh，保存当前用户的public key /root/.ssh，保存root用户的public key">
 <meta name="keywords" content="github">
 <meta property="og:type" content="article">
 <meta property="og:title" content="解决无法将自己github上的代码clone到&#x2F;usr目录下的问题">
 <meta property="og:url" content="http://yoursite.com/2018/05/28/解决无法将自己github上的代码clone到usr目录下的问题/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Linux下代码存在的位置有两种  /home下面，需要当前用户权限 /user/local/include以及其他类似的位置，需要root用户权限  与之对应的.ssh位置也有两个  ~/.ssh，保存当前用户的public key /root/.ssh，保存root用户的public key  将代码clone到/home目录下申请ssh公钥（email替换成注册github时候的邮箱） 1s">
+<meta property="og:description" content="Linux下代码存在的位置有两种  /home下面，需要当前用户权限 /user/local/include以及其他类似的位置，需要root用户权限  与之对应的.ssh位置也有两个  ~/.ssh，保存当前用户的public key /root/.ssh，保存root用户的public key">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-28T04:30:09.596Z">
+<meta property="og:updated_time" content="2018-05-28T04:32:56.602Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="解决无法将自己github上的代码clone到&#x2F;usr目录下的问题">
-<meta name="twitter:description" content="Linux下代码存在的位置有两种  /home下面，需要当前用户权限 /user/local/include以及其他类似的位置，需要root用户权限  与之对应的.ssh位置也有两个  ~/.ssh，保存当前用户的public key /root/.ssh，保存root用户的public key  将代码clone到/home目录下申请ssh公钥（email替换成注册github时候的邮箱） 1s">
+<meta name="twitter:description" content="Linux下代码存在的位置有两种  /home下面，需要当前用户权限 /user/local/include以及其他类似的位置，需要root用户权限  与之对应的.ssh位置也有两个  ~/.ssh，保存当前用户的public key /root/.ssh，保存root用户的public key">
 
 
 
@@ -347,7 +347,7 @@
                 
               
 
-              <time title="创建时间：2018-05-28 00:00:00 / 修改时间：12:30:09" itemprop="dateCreated datePublished" datetime="2018-05-28T00:00:00+08:00">2018-05-28</time>
+              <time title="创建时间：2018-05-28 00:00:00 / 修改时间：12:32:56" itemprop="dateCreated datePublished" datetime="2018-05-28T00:00:00+08:00">2018-05-28</time>
             
 
             
@@ -413,6 +413,7 @@
 <li>~/.ssh，保存当前用户的public key</li>
 <li>/root/.ssh，保存root用户的public key</li>
 </ul>
+<a id="more"></a>
 <h2 id="将代码clone到-home目录下"><a href="#将代码clone到-home目录下" class="headerlink" title="将代码clone到/home目录下"></a>将代码clone到/home目录下</h2><p>申请ssh公钥（email替换成注册github时候的邮箱）</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C "email"</span><br></pre></td></tr></table></figure>
 <p>一路回车（如果提示重名说明之前创建过公钥，如果之前的公钥没用了就先删掉，或者重命名）</p>
