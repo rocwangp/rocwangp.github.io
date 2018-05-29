@@ -301,6 +301,180 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/29/C++代码片段（三）过滤可变模板参数中某些类型的变量/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/29/C++代码片段（三）过滤可变模板参数中某些类型的变量/" itemprop="url">
+                  C++代码片段（三）过滤可变模板参数中某些类型的变量
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-29 00:00:00 / 修改时间：19:07:46" itemprop="dateCreated datePublished" datetime="2018-05-29T00:00:00+08:00">2018-05-29</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/source_dir/categories/C/" itemprop="url" rel="index"><span itemprop="name">C++</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>将可变模板参数列表中的某些类型过滤掉，然后返回剩下数据的元组。用到了上一篇中的<a href="https://rocwangp.github.io/2018/05/26/C++%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5%EF%BC%88%E4%BA%8C%EF%BC%89%E5%88%A4%E6%96%AD%E5%8F%AF%E5%8F%98%E6%A8%A1%E6%9D%BF%E5%8F%82%E6%95%B0%E5%88%97%E4%B8%AD%E6%98%AF%E5%90%A6%E5%8C%85%E5%90%AB%E6%9F%90%E4%B8%80%E7%89%B9%E5%AE%9A%E7%B1%BB%E5%9E%8B/" target="_blank" rel="noopener">判断可变模板参数中是否包含某一特定类型</a>的方法</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;tuple&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;list&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">contains</span> :</span> <span class="keyword">public</span> <span class="built_in">std</span>::false_type &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U, <span class="keyword">typename</span>... Args&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">contains</span>&lt;T, U, Args...&gt; :</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">std</span>::<span class="keyword">conditional_t</span>&lt;<span class="built_in">std</span>::is_same_v&lt;T, U&gt;, <span class="built_in">std</span>::true_type, contains&lt;T, Args...&gt;&gt; &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... FilterArgs&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">type_filter</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="title">filter</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="built_in">std</span>::tuple&#123;&#125;; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="title">filter</span><span class="params">(T&amp;&amp; t, Args&amp;&amp;... args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">using</span> type = <span class="built_in">std</span>::<span class="keyword">remove_reference_t</span>&lt;T&gt;;</span><br><span class="line">        <span class="function"><span class="keyword">if</span> <span class="title">constexpr</span> <span class="params">(contains&lt;type, FilterArgs...&gt;::value)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> filter(<span class="built_in">std</span>::forward&lt;Args&gt;(args)...);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">std</span>::tuple_cat(<span class="built_in">std</span>::make_tuple(<span class="built_in">std</span>::forward&lt;T&gt;(t)), filter(<span class="built_in">std</span>::forward&lt;Args&gt;(args)...));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>相当于依次遍历可变模板参数列表中的数据，每次遍历时判断数据的类型是否是想要过滤掉的类型（也就是判断当前类型是否存在于过滤类型中），如果是则丢弃当前数据继续遍历，否则保留数据</p>
+<p>没有过滤掉的数据保存在元组中，采用std::tuple_cat方法将两个std::tuple连接成一个</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::tuple&lt;<span class="keyword">int</span>, <span class="keyword">double</span>&gt; t1&#123; <span class="number">10</span>, <span class="number">2.5</span> &#125;;</span><br><span class="line"><span class="built_in">std</span>::tuple&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt; t2&#123; <span class="string">"abc"</span> &#125;;</span><br><span class="line"><span class="keyword">auto</span> t = <span class="built_in">std</span>::tuple_cat(t1, t2); <span class="comment">// decltype(t) = std::tuple&lt;int, double, std::string&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="需要注意的问题"><a href="#需要注意的问题" class="headerlink" title="需要注意的问题"></a>需要注意的问题</h2><p>过滤函数filter的声明为</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="title">filter</span><span class="params">(T&amp;&amp; t, Args&amp;&amp;... args)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>接收的参数类型是T&amp;&amp;，所以分成两种情况讨论（假设传入的类型是int）</p>
+<ul>
+<li>传入的t是左值引用类型int&amp;，则T会被推导成int&amp;，由于引用叠加效果，int&amp;&amp;&amp; =&gt; int&amp;</li>
+<li>传入的t是右值引用类型int&amp;&amp;，则T会被推导成int，不存在引用叠加效果，int&amp;&amp; =&gt; int&amp;&amp;</li>
+</ul>
+<p>而在调用contains&lt;T, Args…&gt;判断T是否出现在Args…中时，如果T是引用类型，就无法正确比较，也就是下面的这种情况</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">if</span> <span class="title">constexpr</span> <span class="params">(<span class="built_in">std</span>::is_same_v&lt;<span class="keyword">int</span>&amp;, <span class="keyword">int</span>&gt;)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"int&amp; is same as int\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"int&amp; is different from int\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出：int&amp; is different from int</span></span><br></pre></td></tr></table></figure>
+<p>所以需要在调用contains之前去掉类型T上面的引用属性，使用标准库实现</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="keyword">remove_reference_t</span>&lt;T&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="测试程序"><a href="#测试程序" class="headerlink" title="测试程序"></a>测试程序</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;tuple&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;list&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">contains</span> :</span> <span class="keyword">public</span> <span class="built_in">std</span>::false_type &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U, <span class="keyword">typename</span>... Args&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">contains</span>&lt;T, U, Args...&gt; :</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">std</span>::<span class="keyword">conditional_t</span>&lt;<span class="built_in">std</span>::is_same_v&lt;T, U&gt;, <span class="built_in">std</span>::true_type, contains&lt;T, Args...&gt;&gt; &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... FilterArgs&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">type_filter</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="title">filter</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="built_in">std</span>::tuple&#123;&#125;; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="title">filter</span><span class="params">(T&amp;&amp; t, Args&amp;&amp;... args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">using</span> type = <span class="built_in">std</span>::<span class="keyword">remove_reference_t</span>&lt;T&gt;;</span><br><span class="line">        <span class="function"><span class="keyword">if</span> <span class="title">constexpr</span> <span class="params">(contains&lt;type, FilterArgs...&gt;::value)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> filter(<span class="built_in">std</span>::forward&lt;Args&gt;(args)...);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">std</span>::tuple_cat(<span class="built_in">std</span>::make_tuple(<span class="built_in">std</span>::forward&lt;T&gt;(t)), filter(<span class="built_in">std</span>::forward&lt;Args&gt;(args)...));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tuple, <span class="keyword">typename</span> Func, <span class="built_in">std</span>::<span class="keyword">size_t</span>... Idx&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">for_each</span><span class="params">(Tuple&amp;&amp; t, Func&amp;&amp; f, <span class="built_in">std</span>::index_sequence&lt;Idx...&gt;)</span> </span>&#123;</span><br><span class="line">    (f(<span class="built_in">std</span>::get&lt;Idx&gt;(t)), ...);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Args&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">filter_test</span><span class="params">(Args&amp;&amp;... args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> t = type_filter&lt;<span class="keyword">int</span>, <span class="built_in">std</span>::<span class="built_in">list</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt;, <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt;::filter(<span class="built_in">std</span>::forward&lt;Args&gt;(args)...);</span><br><span class="line">    for_each(t, [](<span class="keyword">auto</span>&amp; item) &#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; item &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    &#125;, <span class="built_in">std</span>::make_index_sequence&lt;<span class="built_in">std</span>::tuple_size_v&lt;<span class="keyword">decltype</span>(t)&gt;&gt;&#123;&#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">// l被推导为左值引用std::list&lt;std::string&gt;&amp;</span></span><br><span class="line">	<span class="comment">// n被推导为左值引用int&amp;</span></span><br><span class="line">	<span class="comment">// 字面值常量"abc", 20, 2.5被推导为右值引用std::string&amp;&amp;, int&amp;&amp;, double&amp;&amp;</span></span><br><span class="line">	<span class="comment">// vector被推导为右值引用std::vector&lt;int&gt;&amp;&amp;</span></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">list</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt; l&#123; <span class="string">"abc"</span>, <span class="string">"def"</span>, <span class="string">"123"</span> &#125;;</span><br><span class="line">    <span class="keyword">int</span> n = <span class="number">10</span>;</span><br><span class="line">    filter_test(l, <span class="string">"abc"</span>, n, <span class="number">20</span>, <span class="number">2.5</span>, <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/解决无法将自己github上的代码clone到usr目录下的问题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -347,7 +521,7 @@
                 
               
 
-              <time title="创建时间：2018-05-28 00:00:00 / 修改时间：12:32:56" itemprop="dateCreated datePublished" datetime="2018-05-28T00:00:00+08:00">2018-05-28</time>
+              <time title="创建时间：2018-05-28 00:00:00 / 修改时间：12:34:09" itemprop="dateCreated datePublished" datetime="2018-05-28T00:00:00+08:00">2018-05-28</time>
             
 
             
@@ -1853,187 +2027,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/25/TCP-IP学习笔记（四）TCP超时重传及拥塞控制/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/25/TCP-IP学习笔记（四）TCP超时重传及拥塞控制/" itemprop="url">
-                  TCP/IP学习笔记（四）TCP超时重传及拥塞控制
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-02-25 00:00:00" itemprop="dateCreated datePublished" datetime="2018-02-25T00:00:00+08:00">2018-02-25</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-05-23 16:21:36" itemprop="dateModified" datetime="2018-05-23T16:21:36+08:00">2018-05-23</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/source_dir/categories/TCP-IP/" itemprop="url" rel="index"><span itemprop="name">TCP/IP</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>TCP是可靠的传输层协议，但这并不意味着一端发送的数据一定可以到达另一端，因为传输过程中遇到的情况是不可控的，很有可能就有某些数据发生丢失，所以”可靠”其实并不可靠。</p>
-<p>不过毕竟现如今的网络设备还算完善，传输过程中由于硬件错误导致数据丢失的情况基本可以忽略，那么，数据丢失的原因就只能是：传输路径过于拥堵，导致某些路由器或链路缓冲区无法再容纳多余数据，那么对于新来的数据包就只能丢掉。</p>
-<p>为了解决这一问题，保证就算传输过程中遇到再多麻烦，也尽量使数据可以顺利到达对端，TCP引入拥塞控制用于缓解网络中的拥堵情况，同时采用超时重传机制解决数据的丢失问题</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/02/25/TCP-IP学习笔记（四）TCP超时重传及拥塞控制/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2076,7 +2074,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">30</span>
+                    <span class="site-state-item-count">31</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
