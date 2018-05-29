@@ -108,18 +108,18 @@
 
 
 
-  <meta name="description" content="将可变模板参数列表中的某些类型过滤掉，然后返回剩下数据的元组。用到了上一篇中的判断可变模板参数中是否包含某一特定类型的方法 1234567891011121314151617181920212223242526272829#include &amp;lt;iostream&amp;gt;#include &amp;lt;tuple&amp;gt;#include &amp;lt;string&amp;gt;#include &amp;lt;vector">
+  <meta name="description" content="将可变模板参数列表中的某些类型过滤掉，然后返回剩下数据的元组。用到了上一篇中的判断可变模板参数中是否包含某一特定类型的方法">
 <meta name="keywords" content="C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++代码片段（三）过滤可变模板参数中某些类型的变量">
 <meta property="og:url" content="http://yoursite.com/2018/05/29/C++代码片段（三）过滤可变模板参数中某些类型的变量/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="将可变模板参数列表中的某些类型过滤掉，然后返回剩下数据的元组。用到了上一篇中的判断可变模板参数中是否包含某一特定类型的方法 1234567891011121314151617181920212223242526272829#include &amp;lt;iostream&amp;gt;#include &amp;lt;tuple&amp;gt;#include &amp;lt;string&amp;gt;#include &amp;lt;vector">
+<meta property="og:description" content="将可变模板参数列表中的某些类型过滤掉，然后返回剩下数据的元组。用到了上一篇中的判断可变模板参数中是否包含某一特定类型的方法">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-29T11:07:46.311Z">
+<meta property="og:updated_time" content="2018-05-29T11:08:33.561Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++代码片段（三）过滤可变模板参数中某些类型的变量">
-<meta name="twitter:description" content="将可变模板参数列表中的某些类型过滤掉，然后返回剩下数据的元组。用到了上一篇中的判断可变模板参数中是否包含某一特定类型的方法 1234567891011121314151617181920212223242526272829#include &amp;lt;iostream&amp;gt;#include &amp;lt;tuple&amp;gt;#include &amp;lt;string&amp;gt;#include &amp;lt;vector">
+<meta name="twitter:description" content="将可变模板参数列表中的某些类型过滤掉，然后返回剩下数据的元组。用到了上一篇中的判断可变模板参数中是否包含某一特定类型的方法">
 
 
 
@@ -347,7 +347,7 @@
                 
               
 
-              <time title="创建时间：2018-05-29 00:00:00 / 修改时间：19:07:46" itemprop="dateCreated datePublished" datetime="2018-05-29T00:00:00+08:00">2018-05-29</time>
+              <time title="创建时间：2018-05-29 00:00:00 / 修改时间：19:08:33" itemprop="dateCreated datePublished" datetime="2018-05-29T00:00:00+08:00">2018-05-29</time>
             
 
             
@@ -404,6 +404,7 @@
 
       
         <p>将可变模板参数列表中的某些类型过滤掉，然后返回剩下数据的元组。用到了上一篇中的<a href="https://rocwangp.github.io/2018/05/26/C++%E4%BB%A3%E7%A0%81%E7%89%87%E6%AE%B5%EF%BC%88%E4%BA%8C%EF%BC%89%E5%88%A4%E6%96%AD%E5%8F%AF%E5%8F%98%E6%A8%A1%E6%9D%BF%E5%8F%82%E6%95%B0%E5%88%97%E4%B8%AD%E6%98%AF%E5%90%A6%E5%8C%85%E5%90%AB%E6%9F%90%E4%B8%80%E7%89%B9%E5%AE%9A%E7%B1%BB%E5%9E%8B/" target="_blank" rel="noopener">判断可变模板参数中是否包含某一特定类型</a>的方法</p>
+<a id="more"></a>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;tuple&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;list&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">contains</span> :</span> <span class="keyword">public</span> <span class="built_in">std</span>::false_type &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U, <span class="keyword">typename</span>... Args&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">contains</span>&lt;T, U, Args...&gt; :</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">std</span>::<span class="keyword">conditional_t</span>&lt;<span class="built_in">std</span>::is_same_v&lt;T, U&gt;, <span class="built_in">std</span>::true_type, contains&lt;T, Args...&gt;&gt; &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... FilterArgs&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">type_filter</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="title">filter</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="built_in">std</span>::tuple&#123;&#125;; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="title">filter</span><span class="params">(T&amp;&amp; t, Args&amp;&amp;... args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">using</span> type = <span class="built_in">std</span>::<span class="keyword">remove_reference_t</span>&lt;T&gt;;</span><br><span class="line">        <span class="function"><span class="keyword">if</span> <span class="title">constexpr</span> <span class="params">(contains&lt;type, FilterArgs...&gt;::value)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> filter(<span class="built_in">std</span>::forward&lt;Args&gt;(args)...);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">std</span>::tuple_cat(<span class="built_in">std</span>::make_tuple(<span class="built_in">std</span>::forward&lt;T&gt;(t)), filter(<span class="built_in">std</span>::forward&lt;Args&gt;(args)...));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>相当于依次遍历可变模板参数列表中的数据，每次遍历时判断数据的类型是否是想要过滤掉的类型（也就是判断当前类型是否存在于过滤类型中），如果是则丢弃当前数据继续遍历，否则保留数据</p>
 <p>没有过滤掉的数据保存在元组中，采用std::tuple_cat方法将两个std::tuple连接成一个</p>
