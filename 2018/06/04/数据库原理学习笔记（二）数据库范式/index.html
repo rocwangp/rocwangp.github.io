@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="范式可以理解成在设计数据表时的规范级别，常见的范式有  第一范式（1NF） 第二范式（2NF） 第三范式（3NF） BC范式（BCNF）">
+<meta name="keywords" content="数据库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库原理学习笔记（二）数据库范式">
+<meta property="og:url" content="http://yoursite.com/2018/06/04/数据库原理学习笔记（二）数据库范式/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="范式可以理解成在设计数据表时的规范级别，常见的范式有  第一范式（1NF） 第二范式（2NF） 第三范式（3NF） BC范式（BCNF）">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-06-04T15:23:01.424Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据库原理学习笔记（二）数据库范式">
+<meta name="twitter:description" content="范式可以理解成在设计数据表时的规范级别，常见的范式有  第一范式（1NF） 第二范式（2NF） 第三范式（3NF） BC范式（BCNF）">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/04/数据库原理学习笔记（二）数据库范式/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>数据库原理学习笔记（二）数据库范式 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/04/数据库原理学习笔记（二）数据库范式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据库原理学习笔记（二）数据库范式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-06-04 00:00:00 / 修改时间：23:23:01" itemprop="dateCreated datePublished" datetime="2018-06-04T00:00:00+08:00">2018-06-04</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/source_dir/categories/数据库/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>范式可以理解成在设计数据表时的规范级别，常见的范式有</p>
+<ul>
+<li>第一范式（1NF）</li>
+<li>第二范式（2NF）</li>
+<li>第三范式（3NF）</li>
+<li>BC范式（BCNF）</li>
+</ul>
+<a id="more"></a>
+<h2 id="第一范式"><a href="#第一范式" class="headerlink" title="第一范式"></a>第一范式</h2><p>要满足第一范式，要求数据表的每个属性无法再分，也就是需要满足原子性。可以把“不可再分”理解成无法用一个单独的值表示，比如说“系”这个属性，平时常说的“计算机系”，“化学系”实际上指的是系名，而系的管理者被称为系主任，所以对于“系”这个属性，只能通过将它拆分成若干属性的组合（系名，系主任，…）来表示。</p>
+<p>所以如果数据表中某个属性指的是类似上面的“系”这样的属性，就不满足第一范式，解决办法就是将这个可以再分的属性继续分解</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> student ( </span><br><span class="line">	<span class="keyword">id</span> <span class="built_in">INT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT, <span class="comment">/* 学号 */</span></span><br><span class="line">	<span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>, <span class="comment">/* 姓名 */</span></span><br><span class="line">	faculty <span class="comment">/* 系，应该用什么类型表示？它包括系名，系主任等若干子属性 */</span></span><br><span class="line">	...</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>可以看到，如果某个属性可以继续分解，那么是无法在创建数据表时表示它的，所以一般可以成功创建的数据表（前提是语义正确）都是符合第一范式的要求的</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> student ( </span><br><span class="line">	student_id <span class="built_in">INT</span>, </span><br><span class="line">	student_name <span class="built_in">VARCHAR</span>(<span class="number">20</span>), </span><br><span class="line">	faculty_name <span class="built_in">VARCHAR</span>(<span class="number">20</span>), </span><br><span class="line">	faculty_boss <span class="built_in">VARCHAR</span>(<span class="number">20</span>), </span><br><span class="line">	PRIMARY <span class="keyword">KEY</span> (student_id) </span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<h2 id="第二范式"><a href="#第二范式" class="headerlink" title="第二范式"></a>第二范式</h2><p>判断一个数据表是否满足第二范式，可以观察是否存在非主属性对于码的部分函数依赖，方法是</p>
+<ul>
+<li>找出数据表中所有的码</li>
+<li>根据第一步找出的码，找出所有主属性</li>
+<li>在数据表中的所有属性中去除主属性，得到非主属性</li>
+<li>查看是否存在某个非主属性对于码的部分函数依赖</li>
+</ul>
+<p>如果存在部分函数依赖，则这个数据表就不符合第二范式，解决方法就是模式分解，将违反第二范式的属性单独提出创建一个新表或者分解表使得该表的码只包含一个属性</p>
+<p>对于部分函数依赖，码至少要包含两个属性，所以上面的student表是满足第二范式的，下面考虑另一个表student_course，它描述了学生的选课信息，包含</p>
+<ul>
+<li>学生信息</li>
+<li>课程名，课程成绩</li>
+<li>学生所在系信息</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> student_course ( </span><br><span class="line">	student_id <span class="built_in">INT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>, </span><br><span class="line">	student_name <span class="built_in">VARCHAR</span>(<span class="number">20</span>), </span><br><span class="line">	course_name <span class="built_in">VARCHAR</span>(<span class="number">20</span>), </span><br><span class="line">	course_score <span class="built_in">INT</span>, </span><br><span class="line">	faculty_name <span class="built_in">VARCHAR</span>(<span class="number">20</span>), </span><br><span class="line">	faculty_boss <span class="built_in">VARCHAR</span>(<span class="number">20</span>), </span><br><span class="line">	PRIMARY <span class="keyword">KEY</span> (student_id, course_name) </span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>由于课程成绩必须通过确定是哪个学生的哪门课来获取，所以这个表的主码（主键）是（student_id, course_name），现在来一步步分析这个表是否符合第二范式</p>
+<h3 id="分析student-course表"><a href="#分析student-course表" class="headerlink" title="分析student_course表"></a>分析student_course表</h3><p>第一步，找出数据表中的所有的码。由上面的分析可得这个表只有唯一的码（student_id, course_name）</p>
+<p>第二步，找出所有的主属性。码中的每个属性都是主属性，所以主属性包括student_id和course_name</p>
+<p>第三步，找出所有的非主属性。除去主属性的都是非主属性，所以非主属性包括student_name, course_score, faculty_name, faculty_boss</p>
+<p>第四步，判断非主属性是否对于码存在部分函数依赖</p>
+<p>每个属性之间的依赖关系</p>
+<ul>
+<li>student_id可以推导出student_name，所以student_name完全依赖于student_id</li>
+<li>student_id可以推导出faculty_name和faculty_boss，所以二者完全依赖于student_id</li>
+<li>(student_id, course_name)可以推导出course_score，所以course_score完全依赖于(student_id, course_name)</li>
+</ul>
+<p>由上述三个关系可以分析出部分依赖关系</p>
+<ul>
+<li>由于faculty_name完全函数依赖于student_id，所以faculty_name部分函数依赖于(student_id, course_name)</li>
+<li>由于faculty_boss完全函数依赖于student_id，所以faculty_name部分函数依赖于(student_id, course_name)</li>
+<li>…</li>
+</ul>
+<p>所以这个表不满足第二范式，可以通过模式分解解决这一问题，比如将课程相关的信息提出去单独作为一个表，这样student_course表的码就只剩一个属性student_id了，自然不存在部分函数依赖</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> student ( </span><br><span class="line">	student_id <span class="built_in">INT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>, </span><br><span class="line">	student_name <span class="built_in">VARCHAR</span>(<span class="number">20</span>), </span><br><span class="line">	faculty_name <span class="built_in">VARCHAR</span>(<span class="number">20</span>), </span><br><span class="line">	faculty_boss <span class="built_in">VARCHAR</span>(<span class="number">20</span>) ,</span><br><span class="line">	PRIMARY <span class="keyword">KEY</span> (student_id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> course ( </span><br><span class="line">	student_id <span class="built_in">INT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>, </span><br><span class="line">	course_name <span class="built_in">VARCHAR</span>(<span class="number">20</span>), </span><br><span class="line">	course_score <span class="built_in">INT</span>, </span><br><span class="line">	PRIMARY <span class="keyword">KEY</span>(student_id, course_name) </span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<h2 id="第三范式"><a href="#第三范式" class="headerlink" title="第三范式"></a>第三范式</h2><p>判断一个数据表是否满足第三范式，可以观察是否存在非主属性对于码的传递函数依赖，解决方法也和第二范式相同，将导致不符合第三范式的那个属性提出，单独创建一个表</p>
+<p>可以对上面的student和course表进行分析，判断这两个表是否满足第三范式</p>
+<h3 id="分析course表"><a href="#分析course表" class="headerlink" title="分析course表"></a>分析course表</h3><p>第一步，找出所有的码。course的码只有（student_id, course_name）</p>
+<p>第二步，找出所有的主属性。主属性有student_id和course_name</p>
+<p>第三步，找出所有的非主属性。非主属性有course_score</p>
+<p>第四步，判断是否存在非主属性对于码的传递函数依赖。因为传递函数依赖至少需要有两个非主属性，所以course表不存在对于码的传递函数依赖</p>
+<p>所以course表满足第三范式</p>
+<h3 id="分析student表"><a href="#分析student表" class="headerlink" title="分析student表"></a>分析student表</h3><p>第一步，找出所有的码。student的码只有（student_id）</p>
+<p>第二步，找出所有的主属性。主属性为student_id</p>
+<p>第三步，找出所有的非主属性。非主属性有student_name，faculty_name和faculty_boss</p>
+<p>第四步，判断是否存在非主属性对于码的传递函数依赖。从客观事实的角度出发，如果知道系名，就可以知道系主任是谁，所以faculty_boss完全函数依赖于faculty_name。又因为faculty_name完全函数依赖于码student_id，所以faculty_boss传递函数依赖于码student_id</p>
+<p>所以student表不满足第三范式。</p>
+<p>可以通过将系相关的信息提出去单独创建一张表，比如</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> student ( </span><br><span class="line">	student_id <span class="built_in">INT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>, </span><br><span class="line">	student_name <span class="built_in">VARCHAR</span>(<span class="number">20</span>), </span><br><span class="line">	faculty_name <span class="built_in">VARCHAR</span>(<span class="number">20</span>), </span><br><span class="line">	PRIMARY <span class="keyword">KEY</span> (student_id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> faculty ( </span><br><span class="line">	faculty_name <span class="built_in">VARCHAR</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>, </span><br><span class="line">	faculty_boss <span class="built_in">VARCHAR</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>, </span><br><span class="line">	PRIMARY <span class="keyword">KEY</span> (faculty_name) </span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<h2 id="BC范式"><a href="#BC范式" class="headerlink" title="BC范式"></a>BC范式</h2><p>BC范式可以通过判断是否存在主属性对于码的部分函数依赖。出现这种情况的原因通常是由于数据表中存在着多个码。比如说（A，C）和（B，C）都是这个数据表的码，同时B完全函数依赖于A，那么主属性B就部分函数依赖于码（A，C），可以通过继续分解成两个表分别是</p>
+<ul>
+<li>表1，包含属性A，B</li>
+<li>表2，包含属性A，C</li>
+</ul>
+<p>解决</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>解释一下关系数据库的第一第二第三范式？ - 刘慰的回答 - 知乎 <a href="https://www.zhihu.com/question/24696366/answer/29189700" target="_blank" rel="noopener">https://www.zhihu.com/question/24696366/answer/29189700</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据库/" rel="tag"># 数据库</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/03/C++代码片段（四）萃取模板类的模板参数类型/" rel="next" title="C++代码片段（四）萃取模板类的模板参数类型">
+                <i class="fa fa-chevron-left"></i> C++代码片段（四）萃取模板类的模板参数类型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">35</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一范式"><span class="nav-number">1.</span> <span class="nav-text">第一范式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二范式"><span class="nav-number">2.</span> <span class="nav-text">第二范式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分析student-course表"><span class="nav-number">2.1.</span> <span class="nav-text">分析student_course表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三范式"><span class="nav-number">3.</span> <span class="nav-text">第三范式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分析course表"><span class="nav-number">3.1.</span> <span class="nav-text">分析course表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析student表"><span class="nav-number">3.2.</span> <span class="nav-text">分析student表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BC范式"><span class="nav-number">4.</span> <span class="nav-text">BC范式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
